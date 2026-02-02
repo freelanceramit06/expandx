@@ -1,7 +1,7 @@
 package org.expandx.pages;
 
-import com.epam.healenium.SelfHealingDriver;
 import driver.DriverManager;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.Utility;
@@ -10,7 +10,7 @@ import java.time.Duration;
 
 public class BasePage {
 
-    public SelfHealingDriver driver;
+    public WebDriver driver;
     public WebDriverWait wait;
     public Utility utility;
 
@@ -21,7 +21,7 @@ public class BasePage {
         this.utility = new Utility();
     }
 
-    protected SelfHealingDriver getDriver() {
+    protected WebDriver getDriver() {
         return driver;
     }
 

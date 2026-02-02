@@ -104,4 +104,38 @@ public class ProformaInvoicesPage extends BasePage{
                 "Cancellation message does not match! Expected to contain: " + expectedMessage + " but was: " + actualMessage
         );
     }
+
+    public String returnQuickFilterValue(String filterName) {
+        // Locator for the span that contains the quick-filter value next to the provided label
+        try {
+            Thread.sleep(1000); // brief pause to allow UI update
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        By locator = By.xpath("//p[br and normalize-space(text()[last()])='" + filterName + "']//span");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        try {
+            // Wait until the element is present and its text becomes a numeric value
+            String text = wait.until(d -> {
+                WebElement el = d.findElement(locator);
+                String t = el.getText();
+                // Treat blank/empty text as not-ready yet
+                if (t.trim().isEmpty()) return null;
+                // Clean the text: remove all characters except digits and minus sign
+                String cleaned = t.trim().replaceAll("[^0-9\\-]", "");
+                // Return original text when cleaned text contains digits
+                return (!cleaned.isEmpty()) ? t.trim() : null;
+            });
+
+            if (text == null) {
+                throw new RuntimeException("Quick filter value did not become numeric for filter: " + filterName);
+            }
+
+            return text;
+        } catch (Exception e) {
+            throw new RuntimeException("Timed out waiting for quick filter '" + filterName + "' to have a numeric value.", e);
+        }
+    }
 }

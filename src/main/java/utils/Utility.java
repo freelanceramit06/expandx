@@ -1,14 +1,12 @@
 package utils;
 
-import com.epam.healenium.SelfHealingDriver;
 import context.ScenarioContext;
 import driver.DriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -16,7 +14,7 @@ import java.util.Objects;
  */
 public final class Utility {
 
-    private static SelfHealingDriver drv;
+    private static WebDriver driver;
 
     private static final ScenarioContext scenarioContext = new ScenarioContext();
 
@@ -25,18 +23,18 @@ public final class Utility {
         // Prevent instantiation
     }
 
-    private static SelfHealingDriver getDriverInstance() {
-        if (drv == null) {
-            drv = DriverManager.getDriver();
+    private static WebDriver getDriverInstance() {
+        if (driver == null) {
+            driver = DriverManager.getDriver();
         }
-        return drv;
+        return driver;
     }
 
     /**
      * Click element by visible text using provided WebDriver instance.
      */
     public void clickElementBasedOnName(String name) {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
 
         if (drv == null) {
             throw new IllegalStateException("Driver must not be null");
@@ -68,7 +66,7 @@ public final class Utility {
     }
 
     public void enterValueInColumnByHeader(String headerName, String value) {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
         // Step 1: Get the 'data-col-seq' for the given header
         String dataColSeq = getColumnIndexByHeader(headerName, drv);
 
@@ -84,7 +82,7 @@ public final class Utility {
     }
 
     public void enterValueInTextAreaBasedOnLabel(String value, String textLabel) {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
         WebElement textAreaElement = drv.findElement(
                 By.xpath("//label[normalize-space()='"+textLabel+"']/following-sibling::textarea")
         );
@@ -95,14 +93,14 @@ public final class Utility {
     }
 
     // Helper method to get column index based on header name
-    private String getColumnIndexByHeader(String headerName, SelfHealingDriver drv) {
+    private String getColumnIndexByHeader(String headerName, WebDriver drv) {
         WebElement thElement = drv.findElement(By.xpath("//th[a[normalize-space()='" + headerName + "']]") );
         return thElement.getAttribute("data-col-seq");
     }
 
     public void enterDropDownValue(String fieldName, String dropdownValue)  {
 
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
 
         System.out.println("Selecting '" + dropdownValue + "' from dropdown for field '" + fieldName + "'");
 
@@ -110,7 +108,7 @@ public final class Utility {
                 By.xpath("//label[normalize-space(text())='" + fieldName + "']/following-sibling::span//span[@class='selection']")
         );
 
-        if (elements == null || elements.isEmpty()) {
+        if (elements.isEmpty()) {
             throw new RuntimeException("Dropdown element not found for field: " + fieldName);
         }
 
@@ -131,14 +129,14 @@ public final class Utility {
         System.out.println("Dropdown value '" + dropdownValue + "' selected.");
 
         // Send keyboard actions
-        drv.switchTo().activeElement().sendKeys(Keys.ENTER);
+      //  drv.switchTo().activeElement().sendKeys(Keys.ENTER);
         drv.switchTo().activeElement().sendKeys(Keys.TAB);
 
         System.out.println("Keyboard actions sent.");
     }
 
     public void switchToNewTab() {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
 
         // Get all open window handles
         var windowHandles = drv.getWindowHandles();
@@ -154,7 +152,7 @@ public final class Utility {
     public void selectCheckBoxByName(String checkBoxLabel, String checkBoxValue) {
 
         if(Objects.equals(checkBoxValue, "Yes")){
-            SelfHealingDriver drv = getDriverInstance();
+            WebDriver drv = getDriverInstance();
             WebElement checkBox = drv.findElement(
                     By.xpath("//label[normalize-space(text())='" + checkBoxLabel + "']//preceding-sibling::input[@type='checkbox']")
             );
@@ -165,7 +163,7 @@ public final class Utility {
     }
 
     public void readValueFromTextField(String textFieldLabel) {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
 
         WebElement textField = drv.findElement(
                 By.xpath("//*[normalize-space()='"+textFieldLabel+"']/following-sibling::td[1]//input")
@@ -179,7 +177,7 @@ public final class Utility {
     }
 
     public String returnColumnValueByHeader(String headerName) {
-        SelfHealingDriver drv = getDriverInstance();
+        WebDriver drv = getDriverInstance();
         // Step 1: Get the 'data-col-seq' for the given header
         String dataColSeq = getColumnIndexByHeader(headerName, drv);
 

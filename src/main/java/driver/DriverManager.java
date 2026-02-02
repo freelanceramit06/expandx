@@ -1,6 +1,5 @@
 package driver;
 
-import com.epam.healenium.SelfHealingDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,13 +9,13 @@ import java.time.Duration;
 
 public class DriverManager {
 
-    private static SelfHealingDriver driver;
+    private static WebDriver driver;
 
     private DriverManager() {
         // Prevent instantiation
     }
 
-    public static SelfHealingDriver getDriver() {
+    public static WebDriver getDriver() {
         if (driver == null) {
             // 1. Setup ChromeDriver
             WebDriverManager.chromedriver().setup();
@@ -27,11 +26,8 @@ public class DriverManager {
             options.addArguments("--start-maximized");
             // options.addArguments("--headless"); // optional
 
-            // 3. Create original ChromeDriver with options
-            WebDriver originalDriver = new ChromeDriver(options);
-
-            // 4. Wrap original driver with Healenium
-            driver = SelfHealingDriver.create(originalDriver);
+            // 3. Create ChromeDriver with options
+            driver = new ChromeDriver(options);
 
             // Set implicit wait
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
